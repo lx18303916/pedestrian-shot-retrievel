@@ -1,1 +1,1 @@
-/ssd/wwz/cv/bishe/lyl_Person_Reid/yolo_detection/bbox_datasets/105.jpg 4
+E:\python_prj\yolov5-master\runs\detect\exp_2\crops\person\312\kk-Scene-312_27.jpg

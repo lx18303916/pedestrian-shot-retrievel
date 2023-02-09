@@ -1,4 +1,3 @@
-import os
 from os import pardir
 import numpy as np
 import matplotlib.pyplot as plt
@@ -43,41 +42,6 @@ def rank(probe_ft, gallery_ft, title):
     # gallery_label = dis_T[1]
     rank_path = dis_T[1]
 
-    dis = dis[oushi.argmin()]
-    # gallery_label = gallery_label[oushi.argsort()]
-    rank_path = rank_path[oushi.argmin()]
-    return dis, rank_path
-
-probe_ft=np.load('E:\\python_prj\\Video-Person-Search\\feature_extract\\probeft-2048.npy', allow_pickle=True)
-shot_path = "E:\\python_prj\\yolov5-master\\runs\\detect\\exp_2\\crops\\person\\shot_feature"
-distance = []
-oushi = []
-
-
-def get_shot_num(path):
-    strs = path.split("\\")
-    name = strs[len(strs) - 1]
-    return name[9: 12]
-
-
-for root, dirs, files in os.walk(shot_path):
-    for file in files:
-        feature_path = os.path.join(root, file)
-        gallery_ft = np.load(feature_path, allow_pickle=True)
-        for probe in probe_ft:
-            pro_path = probe[1]
-            dis, rank_path = rank(probe[0], gallery_ft, probe[1])
-            distance.append([dis, rank_path])
-            oushi.append(float(dis))
-
-    oushi = np.array(oushi)
-    distance_array = np.array(distance)
-
-    dis_T = distance_array.T
-    dis = dis_T[0]
-    # gallery_label = dis_T[1]
-    rank_path = dis_T[1]
-
     dis = dis[oushi.argsort()]
     # gallery_label = gallery_label[oushi.argsort()]
     rank_path = rank_path[oushi.argsort()]
@@ -86,19 +50,21 @@ for root, dirs, files in os.walk(shot_path):
     print('rank排序\n', rank_path[:10])
     # print('gallery lable\n', gallery_label[:10])
 
-    plt.figure(pro_path, figsize=(10, 5))
+
+    plt.figure(title, figsize=(10,5))
     ax = plt.subplot(1, 11, 1)
     ax.axis('off')
-
-    imshow(pro_path, 'probe')
+    imshow(title, 'probe')
     for i in range(10):
-        shot_num = get_shot_num(rank_path[i])
-        print(shot_num)
-        ax = plt.subplot(1, 11, i + 2)
+        ax = plt.subplot(1, 11, i+2)
         ax.axis('off')
-        ax.set_title(shot_num)
+        ax.set_title('%d' % (i+1), color='green')
 
-        imshow(rank_path[i], shot_num)
+        imshow(rank_path[i], 'rank'+str(i+1))
     plt.savefig("E:\\python_prj\\Video-Person-Search\\feature_extract\\res.png")
 
+probe_ft=np.load('E:\\python_prj\\Video-Person-Search\\feature_extract\\probeft-2048.npy', allow_pickle=True)
+gallery_ft=np.load('E:\\python_prj\\Video-Person-Search\\feature_extract\\galleryft-2048.npy', allow_pickle=True)
 
+for probe in probe_ft:
+    rank(probe[0], gallery_ft, probe[1])
